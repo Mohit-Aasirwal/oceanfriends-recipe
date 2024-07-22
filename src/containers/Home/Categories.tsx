@@ -13,8 +13,8 @@ const categoryList = [
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
