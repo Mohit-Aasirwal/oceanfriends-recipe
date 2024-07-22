@@ -3,12 +3,12 @@ import React from "react";
 import { BsBookmarkDash } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 
-const VerticalCard = () => {
+const VerticalCard = (recipe: any) => {
   return (
-    <div className="relative flex flex-col space-y-5 w-full z-30 rounded-xl">
+    <div className="relative flex flex-col space-y-5 w-48 z-30 rounded-xl">
       <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-max">
         <Image
-          src="https://s3-alpha-sig.figma.com/img/6d76/9d15/36bd89900daf1d31e299baba4eb26aa0?Expires=1722816000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=SwqjvzG5W-VGxBCoErBvGtUzhfsNprImvln3rhKA~DSnFNuKokIiy1rd1uZbhJC~WxSpSe9nicFaTcHoz6j6RQt0HimyHivCTLjtk8K0~KLCBDetGy0fkZAMInvNS6v1csqX3WG-SMu3NaxU--mZfeqGTiDT2vuIp6LLQyezsMgNC5IXuJIQTAemQkixontkp~~H4RQQEi9bbugDhxtc4ST~cSbX1QBPj~zyf8Xivy11ONhS8VjXaRc76zRM9NusfVYif~ZmAhGGU0A7wX4vJZA8iBsKYAwidpKTCJpq4pBrgmGXlVoDh2qXnSssoCkfjDAgjr44Dyx6BmKQ6glEqw__"
+          src={recipe.recipe.strMealThumb}
           alt="Classic Greek Salad"
           width={200}
           height={200}
@@ -19,8 +19,10 @@ const VerticalCard = () => {
           <span>4.5</span>
         </div>
       </div>
-      <div className="flex flex-col space-y-5 justify-between items-center w-fit p-3 pt-20 h-56 container rounded-xl bg-[#D9D9D9]">
-        <h1 className="font-semibold text-center w-3/4">Classic Greek Salad</h1>
+      <div className="flex flex-col space-y-5 justify-between items-center w-full p-3 pt-20 h-56 container rounded-xl bg-[#D9D9D9]">
+        <h1 className="font-semibold text-center w-3/4 truncate">
+          {recipe.recipe.strMeal}
+        </h1>
         <div className="flex flex-row justify-between items-center w-full">
           <div className="flex flex-col space-y-2 text-sm">
             <h1 className="text-[#A9A9A9]">Time</h1>

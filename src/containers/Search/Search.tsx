@@ -2,12 +2,101 @@
 import SearchCard from "@/components/Card/SearchCard";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 
 const SearchPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [recipes, setRecipes] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
+  const getAllRecipesByCategories = async (category: string) => {
+    try {
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.meals || [];
+    } catch (error) {
+      console.error("Error fetching recipes by category:", error);
+      throw error;
+    }
+  };
+
+  const getAllRecipesByAreas = async (area: string) => {
+    try {
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.meals || [];
+    } catch (error) {
+      console.error("Error fetching recipes by area:", error);
+      throw error;
+    }
+  };
+
+  const getCommonRecipes = (categoryRecipes: any[], areaRecipes: any[]) => {
+    const categoryIds = new Set(categoryRecipes.map((recipe) => recipe.idMeal));
+    return areaRecipes.filter((recipe) => categoryIds.has(recipe.idMeal));
+  };
+
+  useEffect(() => {
+    const category = searchParams.get("category");
+    const area = searchParams.get("area");
+
+    if (category) setSelectedCategory(category);
+    if (area) setSelectedArea(area);
+
+    const fetchRecipes = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let fetchedRecipes: any[] = [];
+        if (category && category !== "All" && area && area !== "All") {
+          const categoryRecipes = await getAllRecipesByCategories(category);
+          const areaRecipes = await getAllRecipesByAreas(area);
+          fetchedRecipes = getCommonRecipes(categoryRecipes, areaRecipes);
+        } else if (category && category !== "All") {
+          fetchedRecipes = await getAllRecipesByCategories(category);
+        } else if (area && area !== "All") {
+          fetchedRecipes = await getAllRecipesByAreas(area);
+        }
+        setRecipes(fetchedRecipes);
+      } catch (error) {
+        setError("Failed to fetch recipes");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, [searchParams]);
+
+  const handleFilter = () => {
+    let queryParams = [];
+    if (selectedCategory && selectedCategory !== "All") {
+      queryParams.push(`category=${selectedCategory}`);
+    }
+    if (selectedArea && selectedArea !== "All") {
+      queryParams.push(`area=${selectedArea}`);
+    }
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
+    router.push(`/search${queryString}`);
+    setFiltersOpen(false);
+  };
   return (
     <div className="p-4 pt-10 flex space-y-5 flex-col w-screen min-h-screen overflow-x-hidden">
       <div className="flex flex-row w-full justify-start items-center">
@@ -16,17 +105,38 @@ const SearchPage = () => {
       </div>
       <div className="flex flex-row space-x-3">
         <Search />
-        <Filter />
+        <Filter
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedArea={selectedArea}
+          setSelectedArea={setSelectedArea}
+          handleFilter={handleFilter}
+          setFiltersOpen={setFiltersOpen}
+          filtersOpen={filtersOpen}
+        />
       </div>
       <div className="flex flex-row justify-between items-center">
         <h1 className="font-bold ">Search Result</h1>
-        <p className="text-xs text-[#A9A9A9]">235 results</p>
+        <p className="text-xs text-[#A9A9A9]">{recipes.length} results</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-        <SearchCard />
-        <SearchCard />
-        <SearchCard />
-      </div>
+      {loading ? (
+        <p className="flex w-full justify-center items-center">Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <>
+          {recipes.length === 0 && (
+            <div className="flex w-full justify-center items-center text-gray-400">
+              No Recipes in the selected filters
+            </div>
+          )}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            {recipes.map((recipe) => (
+              <SearchCard key={recipe.idMeal} recipe={recipe} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

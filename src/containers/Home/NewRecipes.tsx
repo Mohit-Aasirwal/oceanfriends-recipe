@@ -4,9 +4,9 @@ import React from "react";
 
 const NewRecipes = () => {
   return (
-    <div>
+    <div className="scrollbar-hide">
       <h1 className="font-bold">New Recipes of your Area</h1>
-      <div className="overflow-x-scroll z-50">
+      <div className="overflow-x-scroll z-50 scrollbar-custom">
         <Slider>
           <HorizontalCard />
           <HorizontalCard />

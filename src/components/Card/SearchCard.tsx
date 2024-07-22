@@ -2,12 +2,12 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 
-const SearchCard = () => {
+const SearchCard = (recipe: any) => {
   return (
     <div className="relative aspect-square rounded-xl">
       <div className="bg-gradient-to-t rounded-xl from-black to-transparent w-full h-full absolute" />
       <Image
-        src="https://s3-alpha-sig.figma.com/img/2234/134e/6e53ef9148ab9085bbd1369e270f0bba?Expires=1722816000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=kF3wU3A8ltcz01BWmzupsxlHPgqWaMiiC-arfXnw5bBA~9xwc2DZhOgTlOZyNAiiE49u~BIt--9ueWMDJW6SMCvUTjobPZHjET0hYVYtvvQikHsBVskcJiB12Pbekr5rB1HS03j~2RbuWZEwYZaXlg5HmxNt5R1HXnydhUiLWa-aLjBU6QOba-rgdE1E8wBU8x9w5m0606ue7LvnLMVR5JMVwGVMqNqpYUTesaONxppyejh7TMaDTPh5uptmJwqhWQPpZYdt6JtTaPKLdb523jLyScDR8wx22AhT3rvc~5qbuMgWsvidBVYi2Eo3LztiNXHSBl8DavdaIoGppFOObA__"
+        src={recipe.recipe.strMealThumb}
         alt=""
         className="rounded-xl h-full w-full"
         width={1000}
@@ -19,7 +19,7 @@ const SearchCard = () => {
       </div>
       <div className="absolute flex-col bottom-2 left-2 md:bottom-5 md:left-5 rounded-xl">
         <h1 className="text-white text-sm font-semibold w-4/5 ">
-          Traditional spare ribs baked
+          {recipe.recipe.strMeal}
         </h1>
         <p className="text-[#A9A9A9] text-sm">By Chef John</p>
       </div>
