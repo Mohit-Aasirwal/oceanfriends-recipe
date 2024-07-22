@@ -1,37 +1,22 @@
 "use client";
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  ReactNode,
-  MouseEvent,
-  TouchEvent,
-} from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-type SliderProps = {
-  children: ReactNode;
-};
-
-const Slider = ({ children }: SliderProps) => {
+const Slider = ({ children }: { children: React.ReactNode }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
-    if (sliderRef.current) {
-      setStartX(e.pageX - sliderRef.current.offsetLeft);
-      setScrollLeft(sliderRef.current.scrollLeft);
-    }
+    setStartX(e.pageX - sliderRef.current!.offsetLeft);
+    setScrollLeft(sliderRef.current!.scrollLeft);
   };
 
-  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setIsDragging(true);
-    if (sliderRef.current) {
-      setStartX(e.touches[0].pageX - sliderRef.current.offsetLeft);
-      setScrollLeft(sliderRef.current.scrollLeft);
-    }
+    setStartX(e.touches[0].pageX - sliderRef.current!.offsetLeft);
+    setScrollLeft(sliderRef.current!.scrollLeft);
   };
 
   const handleMouseLeave = () => {
@@ -42,31 +27,32 @@ const Slider = ({ children }: SliderProps) => {
     setIsDragging(false);
   };
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     e.preventDefault();
-    if (sliderRef.current) {
-      const x = e.pageX - sliderRef.current.offsetLeft;
-      const walk = (x - startX) * 2; // Adjust scrolling speed
-      sliderRef.current.scrollLeft = scrollLeft - walk;
-    }
+    const x = e.pageX - sliderRef.current!.offsetLeft;
+    const walk = (x - startX) * 2; // Adjust scrolling speed
+    sliderRef.current!.scrollLeft = scrollLeft - walk;
   };
 
-  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+  const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging) return;
-    if (sliderRef.current) {
-      const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
-      const walk = (x - startX) * 2; // Adjust scrolling speed
-      sliderRef.current.scrollLeft = scrollLeft - walk;
-    }
+    const x = e.touches[0].pageX - sliderRef.current!.offsetLeft;
+    const walk = (x - startX) * 2; // Adjust scrolling speed
+    sliderRef.current!.scrollLeft = scrollLeft - walk;
   };
 
   useEffect(() => {
     const slider = sliderRef.current;
     if (slider) {
-      slider.addEventListener("touchmove", handleTouchMove, { passive: false });
+      slider.addEventListener("touchmove", handleTouchMove as EventListener, {
+        passive: false,
+      });
       return () => {
-        slider.removeEventListener("touchmove", handleTouchMove);
+        slider.removeEventListener(
+          "touchmove",
+          handleTouchMove as EventListener
+        );
       };
     }
   }, [isDragging, startX, scrollLeft]);
