@@ -30,7 +30,9 @@ const Categories = () => {
           url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${selectedCategory}`;
         }
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          cache: "force-cache",
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

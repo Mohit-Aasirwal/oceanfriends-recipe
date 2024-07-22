@@ -13,7 +13,10 @@ const NewRecipes = () => {
       try {
         const response = await fetch(
           "https://www.themealdb.com/api/json/v1/1/filter.php?a=Indian"
-        );
+          ,
+          {
+            cache: "force-cache",
+          });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

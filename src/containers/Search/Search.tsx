@@ -20,7 +20,10 @@ const SearchPage = () => {
   const getAllRecipesByCategories = async (category: string) => {
     try {
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`,
+        {
+          cache: "force-cache",
+        }
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,7 +39,10 @@ const SearchPage = () => {
   const getAllRecipesByAreas = async (area: string) => {
     try {
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`,
+        {
+          cache: "force-cache",
+        }
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
