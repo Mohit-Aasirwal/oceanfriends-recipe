@@ -2,6 +2,8 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
+// import Dictaphone from "./Speech";
+// import VoiceSearch from "./Speech";
 
 const Search = () => {
   const router = useRouter();
@@ -28,6 +30,8 @@ const Search = () => {
         onKeyDown={handleKeyDown}
         value={searchQuery}
       />
+      {/* <Dictaphone /> */}
+      {/* <VoiceSearch /> */}
     </div>
   );
 };

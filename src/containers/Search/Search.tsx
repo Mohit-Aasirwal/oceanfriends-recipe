@@ -11,7 +11,6 @@ import { IoArrowBack } from "react-icons/io5";
 const SearchPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log(searchParams.get("query"));
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<any[]>([]);

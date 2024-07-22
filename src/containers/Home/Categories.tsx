@@ -19,20 +19,18 @@ const Categories = () => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      if (selectedCategory === "All") {
-        // For "All" category, you might want to fetch a mix of recipes or use a different API endpoint
-        setRecipes([]);
-        return;
-      }
-
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${selectedCategory}`
-        );
+        let url = "";
+        if (selectedCategory === "All") {
+          url = "https://www.themealdb.com/api/json/v1/1/filter.php?a=Indian";
+        } else {
+          url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${selectedCategory}`;
+        }
 
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -70,7 +68,6 @@ const Categories = () => {
       <div className="overflow-x-scroll z-30">
         {loading ? (
           <Loader />
-          // <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
