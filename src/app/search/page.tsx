@@ -1,10 +1,12 @@
 import SearchPage from "@/containers/Search/Search";
-
+import { Suspense } from "react";
 const page = () => {
   return (
-    <div>
-      <SearchPage />
-    </div>
+    <Suspense>
+      <div className="overflow-x-hidden">
+        <SearchPage />
+      </div>
+    </Suspense>
   );
 };
 

@@ -1,4 +1,5 @@
 "use client";
+import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { VscSettings } from "react-icons/vsc";
@@ -83,8 +84,9 @@ const Filter = ({
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-2">Category</h3>
             {loading ? (
-              <p>Loading categories...</p>
-            ) : error ? (
+              <Loader />
+            ) : // <p>Loading...</p>
+            error ? (
               <p className="text-red-500">{error}</p>
             ) : (
               <div className="flex flex-wrap gap-2">
@@ -108,8 +110,9 @@ const Filter = ({
           <div className="mb-4">
             <h3 className="text-lg font-semibold mb-2">Area</h3>
             {areasLoading ? (
-              <p>Loading areas...</p>
-            ) : areasError ? (
+              <Loader />
+            ) : // <p>Loading...</p>
+            areasError ? (
               <p className="text-red-500">{areasError}</p>
             ) : (
               <div className="flex flex-wrap gap-2">

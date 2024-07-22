@@ -5,7 +5,7 @@ import { FaStar } from "react-icons/fa";
 
 const VerticalCard = (recipe: any) => {
   return (
-    <div className="relative flex flex-col space-y-5 w-48 z-30 rounded-xl">
+    <div className="relative flex flex-col space-y-5 w-48 h-56 z-30 rounded-xl">
       <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-max">
         <Image
           src={recipe.recipe.strMealThumb}

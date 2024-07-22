@@ -1,6 +1,7 @@
 "use client";
 import VerticalCard from "@/components/Card/VerticalCard";
 import Slider from "@/components/Slider";
+import Loader from "@/components/Loader";
 import React, { useState, useEffect } from "react";
 
 const categoryList = [
@@ -68,7 +69,8 @@ const Categories = () => {
       </div>
       <div className="overflow-x-scroll z-30">
         {loading ? (
-          <p>Loading...</p>
+          <Loader />
+          // <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (

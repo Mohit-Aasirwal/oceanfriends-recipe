@@ -2,6 +2,8 @@
 import SearchCard from "@/components/Card/SearchCard";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
+import { fetchRecipesBySearch } from "@/functions/fetchRecipesBySearch";
+import Loader from "@/components/Loader";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
@@ -9,6 +11,7 @@ import { IoArrowBack } from "react-icons/io5";
 const SearchPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  console.log(searchParams.get("query"));
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<any[]>([]);
@@ -53,6 +56,7 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
+    const query = searchParams.get("query") || "";
     const category = searchParams.get("category");
     const area = searchParams.get("area");
 
@@ -64,14 +68,19 @@ const SearchPage = () => {
       setError(null);
       try {
         let fetchedRecipes: any[] = [];
-        if (category && category !== "All" && area && area !== "All") {
-          const categoryRecipes = await getAllRecipesByCategories(category);
-          const areaRecipes = await getAllRecipesByAreas(area);
-          fetchedRecipes = getCommonRecipes(categoryRecipes, areaRecipes);
-        } else if (category && category !== "All") {
-          fetchedRecipes = await getAllRecipesByCategories(category);
-        } else if (area && area !== "All") {
-          fetchedRecipes = await getAllRecipesByAreas(area);
+        if (query) {
+          fetchedRecipes = await fetchRecipesBySearch(query);
+          console.log(query, fetchedRecipes);
+        } else {
+          if (category && category !== "All" && area && area !== "All") {
+            const categoryRecipes = await getAllRecipesByCategories(category);
+            const areaRecipes = await getAllRecipesByAreas(area);
+            fetchedRecipes = getCommonRecipes(categoryRecipes, areaRecipes);
+          } else if (category && category !== "All") {
+            fetchedRecipes = await getAllRecipesByCategories(category);
+          } else if (area && area !== "All") {
+            fetchedRecipes = await getAllRecipesByAreas(area);
+          }
         }
         setRecipes(fetchedRecipes);
       } catch (error) {
@@ -120,8 +129,9 @@ const SearchPage = () => {
         <p className="text-xs text-[#A9A9A9]">{recipes.length} results</p>
       </div>
       {loading ? (
-        <p className="flex w-full justify-center items-center">Loading...</p>
-      ) : error ? (
+        <Loader />
+      ) : // <p>Loading...</p>
+      error ? (
         <p className="text-red-500">{error}</p>
       ) : (
         <>
